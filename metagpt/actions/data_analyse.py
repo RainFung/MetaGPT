@@ -24,11 +24,11 @@ from tenacity import retry, stop_after_attempt, wait_fixed
 PROMPT_TEMPLATE = """
 NOTICE
 1. Role: You are a data scientist; the main goal is to write python code for data processing and visualization. 
-2. Requirement: You are provided with a pandas dataframe with metadata information. Your code most likely uses data science packages such as pandas, numpy, matplotlib, etc.
+2. Requirement: You are provided with a pandas dataframe with metadata information. Your code most likely uses data science packages such as pandas, matplotlib, etc.
 3. Attention1: Use '##' to SPLIT SECTIONS, not '#'. Output format carefully referenced "Format example".
 4. Attention2: Use 'pandas' package to process dataframe.
-5. Attention3: Use 'matplotlib' package to visualize data.
-6. Attention4: Save the processed dataframe and the chart in {workspace}/output/.
+5. Attention3: Use 'matplotlib' package to visualize data if required.
+6. Attention4: Save the processed dataframe/chart/code in {workspace}/output/.
 -----
 
 You are provided with the following pandas DataFrame with the following metadata:
@@ -40,14 +40,15 @@ update the python code based on the last user question:
 ```python
 # import all the dependencies required  
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
-# def process_data(df):
-    # code here
-    return df 
+data = pd.read_csv({file_path})
 
-result = process_data(df)
+# def process_data(data):
+    # code here
+
+# def visualize_data(data):
+    # code here
 ```
 """
 
@@ -58,13 +59,14 @@ class DataAnalyse(Action):
 
     async def run(self, context, file_path):
         df = self._read_file(file_path)
-        prompt = PROMPT_TEMPLATE.format(metadata=str(df.head()), context=context, workspace=WORKSPACE_ROOT)
+        prompt = PROMPT_TEMPLATE.format(metadata=str(df.head()), context=context, workspace=WORKSPACE_ROOT, file_path=file_path)
         code = await self.write_code(prompt)
+        # logger.info(code)
+        exec(code)
         # logger.info(f'Writing {filename}..')
         # code = await self.write_code(prompt)
         # code_rsp = await self._aask_v1(prompt, "code_rsp", OUTPUT_MAPPING)
         # self._save(context, filename, code)
-        return code
 
     def _read_file(self, file_path):
         if file_path.endswith(".csv"):
@@ -80,7 +82,8 @@ class DataAnalyse(Action):
         code = CodeParser.parse_code(block="", text=code_rsp)
         return code
 
-
+    async def run_code(self, context, filename):
+        pass
     # def _save_csv(self):
     #     pass
     #
