@@ -2,15 +2,14 @@
 
 import asyncio
 
-from metagpt.actions.data_analyse import DataAnalyse
+from metagpt.actions.data_process import DataAnalyse
 
 
 async def main():
-    file_path = "/Users/rain/Desktop/code/aigc/MetaGPT/tests/data/data_for_test.csv"
+    file_path = "../tests/data/data_for_test.csv"
     context = "Analyze loans for different age groups?"
     role = DataAnalyse()
     await role.run(context, file_path)
-    # print(f"save report to {RESEARCH_PATH / f'{topic}.md'}.")
 
 
 if __name__ == '__main__':
