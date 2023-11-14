@@ -64,12 +64,20 @@ class Costs(NamedTuple):
 
 class CostManager(metaclass=Singleton):
     """计算使用接口的开销"""
+    total_prompt_tokens: int = 0
+    total_completion_tokens: int = 0
+    total_cost: float = 0
+    total_budget: float = 0
 
-    def __init__(self):
-        self.total_prompt_tokens = 0
-        self.total_completion_tokens = 0
-        self.total_cost = 0
-        self.total_budget = 0
+    # def serialize(self):
+    #     return ("metagpt.provider.openai_api.CostManager",
+    #         {
+    #             "total_prompt_tokens": self.total_prompt_tokens,
+    #             "total_completion_tokens": self.total_completion_tokens,
+    #             "total_cost": self.total_cost,
+    #             "total_budget": self.total_budget,
+    #         },
+    #     )
 
     def update_cost(self, prompt_tokens, completion_tokens, model):
         """
@@ -149,6 +157,22 @@ class OpenAIGPTAPI(BaseGPTAPI, RateLimiter):
         self.auto_max_tokens = False
         self._cost_manager = CostManager()
         RateLimiter.__init__(self, rpm=self.rpm)
+
+    def serialize(self):
+        return ("metagpt.provider.openai_api.OpenAIGPTAPI",
+            {
+                'model': CONFIG.openai_api_model,
+                "auto_max_tokens": self.auto_max_tokens,
+                "last_call_time": self.last_call_time,
+                "interval": self.interval,
+                "rpm": self.rpm
+            },
+        )
+
+
+    @staticmethod
+    def deserialize(data: dict):
+        return OpenAIGPTAPI()
 
     def __init_openai(self, config):
         openai.api_key = config.openai_api_key
