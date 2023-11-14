@@ -195,7 +195,7 @@ def deserialize(o):
     # cls = import_string(classname)
     # return cls
     # print(cls)
-    # attr or dataclass or pydantic
+    # attr or dataclass or pydantic.v1
     if attr.has(cls) or dataclasses.is_dataclass(cls):
         class_version = getattr(cls, "__version__", 0)
         if int(version) > class_version:

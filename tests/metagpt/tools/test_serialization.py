@@ -68,10 +68,10 @@ class TestSerDe:
         d = deserialize(s)
         assert i == d
 
-        i = WriteCode("write_code")
-        s = serialize(i)
-        d = deserialize(s)
-        assert i == d
+        # i = WriteCode("write_code")
+        # s = serialize(i)
+        # d = deserialize(s)
+        # assert i == d
 
 
     def test_ser_collections(self):

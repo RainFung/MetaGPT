@@ -5,7 +5,7 @@
 @Author  : alexanderwu
 @File    : search_google.py
 """
-import pydantic
+import pydantic.v1
 
 from metagpt.actions import Action
 from metagpt.config import Config
@@ -107,7 +107,7 @@ class SearchAndSummarize(Action):
 
         try:
             self.search_engine = SearchEngine(self.engine, run_func=search_func)
-        except pydantic.ValidationError:
+        except pydantic.v1.ValidationError:
             self.search_engine = None
 
         self.result = ""
