@@ -9,7 +9,7 @@ import time
 from typing import NamedTuple, Union
 
 import openai
-from openai.error import APIConnectionError
+# from openai.error import APIConnectionError
 from tenacity import (
     after_log,
     retry,
@@ -253,7 +253,7 @@ class OpenAIGPTAPI(BaseGPTAPI, RateLimiter):
         stop=stop_after_attempt(3),
         wait=wait_fixed(1),
         after=after_log(logger, logger.level("WARNING").name),
-        retry=retry_if_exception_type(APIConnectionError),
+        # retry=retry_if_exception_type(APIConnectionError),
         retry_error_callback=log_and_reraise,
     )
     async def acompletion_text(self, messages: list[dict], stream=False) -> str:
