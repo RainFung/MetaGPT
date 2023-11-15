@@ -8,12 +8,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, Field
-from typing import Type, TypedDict
+from typing import Type, TypedDict, Any
 
 from pydantic import BaseModel, Field
 
 from metagpt.logs import logger
-
+# from metagpt.actions import Action
 
 class RawMessage(TypedDict):
     content: str
@@ -25,7 +25,7 @@ class Message(BaseModel):
     content: str
     instruct_content: BaseModel = Field(default=None)
     role: str = Field(default='user')  # system / user / assistant
-    cause_by: Type["Action"] = Field(default="")
+    cause_by: Any
     sent_from: str = Field(default="")
     send_to: str = Field(default="")
     restricted_to: str = Field(default="")

@@ -16,6 +16,7 @@ from metagpt.llm import LLM
 from metagpt.logs import logger
 from metagpt.utils.common import OutputParser
 from metagpt.utils.custom_decoder import CustomDecoder
+from pydantic import BaseModel, Field
 
 
 class Action(ABC):

@@ -7,10 +7,11 @@
 """
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from pydantic import BaseModel
 
 
 @dataclass
-class BaseChatbot(ABC):
+class BaseChatbot(ABC, BaseModel):
     """Abstract GPT class"""
     mode: str = "API"
 

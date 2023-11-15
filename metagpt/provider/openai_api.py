@@ -63,13 +63,11 @@ class Costs(NamedTuple):
 
 
 class CostManager(metaclass=Singleton):
+    total_prompt_tokens: int = 0
+    total_completion_tokens: int = 0
+    total_cost: float = 0.0
+    total_budget: float = 0.0
     """计算使用接口的开销"""
-
-    def __init__(self):
-        self.total_prompt_tokens = 0
-        self.total_completion_tokens = 0
-        self.total_cost = 0
-        self.total_budget = 0
 
     def update_cost(self, prompt_tokens, completion_tokens, model):
         """
