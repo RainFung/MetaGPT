@@ -7,7 +7,7 @@
 """
 import re
 from abc import ABC
-from typing import Optional
+from typing import Optional, Any, ClassVar
 
 from tenacity import retry, stop_after_attempt, wait_fixed
 
@@ -17,20 +17,25 @@ from metagpt.logs import logger
 from metagpt.utils.common import OutputParser
 from metagpt.utils.custom_decoder import CustomDecoder
 from pydantic import BaseModel, Field
+from pydantic_core import SchemaSerializer
+
+def __reduce__(self):
+    return lambda: None, tuple()
+SchemaSerializer.__reduce__ = __reduce__
+
+llm = LLM()
+
+class Action(BaseModel):
+    name: str = ""
+    llm: ClassVar[LLM] = LLM()
+    context: Optional[str] = None
+    prefix: str = ''
+    profile: str = ''
+    desc: str = ''
+    content: str = ''
+    instruct_content: Optional[str] = None
 
 
-class Action(ABC):
-    def __init__(self, name: str = "", context=None, llm: LLM = None):
-        self.name: str = name
-        if llm is None:
-            llm = LLM()
-        self.llm = llm
-        self.context = context
-        self.prefix = ""
-        self.profile = ""
-        self.desc = ""
-        self.content = ""
-        self.instruct_content = None
 
     def set_prefix(self, prefix, profile):
         """Set prefix for later usage"""

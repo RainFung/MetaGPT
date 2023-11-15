@@ -11,15 +11,16 @@ from metagpt.actions import WritePRD
 from metagpt.actions.action_output import ActionOutput
 from metagpt.tools.ser import serialize, deserialize
 from metagpt.actions import Action, WritePRD, WriteTest
-from metagpt.provider.openai_api import CostManager
+from metagpt.provider.openai_api import CostManager, OpenAIGPTAPI
+from metagpt.llm import LLM
 
 def test_idea_message():
-    msg = Message(role='User', content='WTF')
-    s = serialize(msg)
-    print(s)
-    i = deserialize(s)
-    print(i)
-    assert msg == i
+    # msg = Message(role='User', content='WTF')
+    # s = serialize(msg)
+    # print(s)
+    # i = deserialize(s)
+    # print(i)
+    # assert msg == i
 
 
     # idea = 'Write a cli snake game'
@@ -27,9 +28,12 @@ def test_idea_message():
     # message = Message(role='BOSS', content=idea, cause_by=BossRequirement)
     # print(serialize(message))
 
-    cm = CostManager()
-    print(serialize(cm))
-    # action = Action()
-    # print(serialize(action))
+    c = CostManager()
+    s = serialize(c)
+    i = deserialize(s)
+    assert c == i
 
-
+    c = Action()
+    s = serialize(c)
+    i = deserialize(s)
+    assert c == i

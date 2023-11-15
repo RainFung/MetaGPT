@@ -28,6 +28,8 @@ from metagpt.utils.token_counter import (
     count_string_tokens,
     get_max_completion_tokens,
 )
+from pydantic import BaseModel
+from pydantic.dataclasses import dataclass
 
 
 class RateLimiter:
@@ -61,7 +63,7 @@ class Costs(NamedTuple):
     total_cost: float
     total_budget: float
 
-
+@dataclass
 class CostManager(metaclass=Singleton):
     total_prompt_tokens: int = 0
     total_completion_tokens: int = 0
