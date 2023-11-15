@@ -12,17 +12,17 @@ from metagpt.schema import AIMessage, Message, RawMessage, SystemMessage, UserMe
 
 def test_message():
     msg = Message(role='User', content='WTF')
-    assert msg.to_dict()['role'] == 'User'
+    assert msg.to_dict()['role'] == 'User
     assert 'User' in str(msg)
 
 
 def test_all_messages():
     test_content = 'test_message'
     msgs = [
-        UserMessage(test_content),
-        SystemMessage(test_content),
-        AIMessage(test_content),
-        Message(test_content, role='QA')
+        UserMessage(content=test_content),
+        SystemMessage(content=test_content),
+        AIMessage(content=test_content),
+        Message(content=test_content, role='QA')
     ]
     for msg in msgs:
         assert msg.content == test_content

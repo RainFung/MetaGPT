@@ -13,23 +13,25 @@ from typing import Type, TypedDict
 from pydantic import BaseModel
 
 from metagpt.logs import logger
-
+from metagpt.actions import Action
 
 class RawMessage(TypedDict):
     content: str
     role: str
 
 
-@dataclass
-class Message:
+class Message(BaseModel):
     """list[<role>: <content>]"""
     content: str
     instruct_content: BaseModel = field(default=None)
     role: str = field(default='user')  # system / user / assistant
-    cause_by: Type["Action"] = field(default="")
+    cause_by: Type[Action] = field(default="")
     sent_from: str = field(default="")
     send_to: str = field(default="")
     restricted_to: str = field(default="")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def __str__(self):
         # prefix = '-'.join([self.role, str(self.cause_by)])
@@ -45,39 +47,31 @@ class Message:
         }
 
 
-@dataclass
 class UserMessage(Message):
     """便于支持OpenAI的消息
        Facilitate support for OpenAI messages
     """
-    def __init__(self, content: str):
-        super().__init__(content, 'user')
 
 
-@dataclass
+
 class SystemMessage(Message):
     """便于支持OpenAI的消息
        Facilitate support for OpenAI messages
     """
-    def __init__(self, content: str):
-        super().__init__(content, 'system')
 
 
-@dataclass
 class AIMessage(Message):
     """便于支持OpenAI的消息
        Facilitate support for OpenAI messages
     """
-    def __init__(self, content: str):
-        super().__init__(content, 'assistant')
 
 
 if __name__ == '__main__':
     test_content = 'test_message'
     msgs = [
-        UserMessage(test_content),
-        SystemMessage(test_content),
-        AIMessage(test_content),
-        Message(test_content, role='QA')
+        UserMessage(content=test_content),
+        SystemMessage(content=test_content),
+        AIMessage(content=test_content),
+        Message(content=test_content, role='QA')
     ]
     logger.info(msgs)
