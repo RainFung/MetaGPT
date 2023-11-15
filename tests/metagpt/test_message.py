@@ -12,7 +12,7 @@ from metagpt.schema import AIMessage, Message, RawMessage, SystemMessage, UserMe
 
 def test_message():
     msg = Message(role='User', content='WTF')
-    assert msg.to_dict()['role'] == 'User
+    assert msg.to_dict()['role'] == 'User'
     assert 'User' in str(msg)
 
 
