@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 
 @dataclass
-class BaseChatbot(ABC, BaseModel):
+class BaseChatbot(ABC):
     """Abstract GPT class"""
     mode: str = "API"
 
