@@ -19,11 +19,6 @@ from metagpt.utils.custom_decoder import CustomDecoder
 from pydantic import BaseModel, Field
 from pydantic_core import SchemaSerializer
 
-def __reduce__(self):
-    return lambda: None, tuple()
-SchemaSerializer.__reduce__ = __reduce__
-
-llm = LLM()
 
 class Action(BaseModel):
     name: str = ""
