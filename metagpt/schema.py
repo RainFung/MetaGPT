@@ -7,13 +7,13 @@
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, Field
 from typing import Type, TypedDict
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from metagpt.logs import logger
-from metagpt.actions import Action
+
 
 class RawMessage(TypedDict):
     content: str
@@ -23,15 +23,12 @@ class RawMessage(TypedDict):
 class Message(BaseModel):
     """list[<role>: <content>]"""
     content: str
-    instruct_content: BaseModel = field(default=None)
-    role: str = field(default='user')  # system / user / assistant
-    cause_by: Type[Action] = field(default="")
-    sent_from: str = field(default="")
-    send_to: str = field(default="")
-    restricted_to: str = field(default="")
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    instruct_content: BaseModel = Field(default=None)
+    role: str = Field(default='user')  # system / user / assistant
+    cause_by: Type["Action"] = Field(default="")
+    sent_from: str = Field(default="")
+    send_to: str = Field(default="")
+    restricted_to: str = Field(default="")
 
     def __str__(self):
         # prefix = '-'.join([self.role, str(self.cause_by)])
