@@ -43,8 +43,9 @@ ATTENTION: Use '##' to SPLIT SECTIONS, not '#'. Output format carefully referenc
 
 
 class WriteCode(Action):
-    def __init__(self, name="WriteCode", context: list[Message] = None, llm=None):
-        super().__init__(name, context, llm)
+    name: str = "WriteCode"
+    # def __init__(self, name="WriteCode", context: list[Message] = None, llm=None):
+    #     super().__init__(name, context, llm)
 
     def _is_invalid(self, filename):
         return any(i in filename for i in ["mp3", "wav"])

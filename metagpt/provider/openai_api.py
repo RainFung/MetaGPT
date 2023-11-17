@@ -6,7 +6,7 @@
 """
 import asyncio
 import time
-from typing import NamedTuple, Union
+from typing import NamedTuple, Union, ClassVar
 
 import openai
 from openai.error import APIConnectionError
@@ -30,17 +30,23 @@ from metagpt.utils.token_counter import (
 )
 from pydantic import BaseModel
 from pydantic.dataclasses import dataclass
+from metagpt.llm import LLM
 
 
-class RateLimiter:
+class RateLimiter(BaseModel):
+    last_call_time: float = 0.0
+    rpm: float
+
     """Rate control class, each call goes through wait_if_needed, sleep if rate control is needed"""
 
-    def __init__(self, rpm):
-        self.last_call_time = 0
-        # Here 1.1 is used because even if the calls are made strictly according to time,
-        # they will still be QOS'd; consider switching to simple error retry later
-        self.interval = 1.1 * 60 / rpm
-        self.rpm = rpm
+    def __post_init__(self):
+        self.interval = self.rpm / 60
+    # def __init__(self, rpm):
+    #     self.last_call_time = 0
+    #     # Here 1.1 is used because even if the calls are made strictly according to time,
+    #     # they will still be QOS'd; consider switching to simple error retry later
+    #     self.interval = 1.1 * 60 / rpm
+    #     self.rpm = rpm
 
     def split_batches(self, batch):
         return [batch[i : i + self.rpm] for i in range(0, len(batch), self.rpm)]
@@ -136,8 +142,23 @@ See FAQ 5.8
     )
     raise retry_state.outcome.exception()
 
+    name: str = ""
+    llm: ClassVar[LLM] = LLM()
+    context: Optional[str] = None
+    prefix: str = ''
+    profile: str = ''
+    desc: str = ''
+    content: str = ''
+    instruct_content: Optional[str] = None
+
 
 class OpenAIGPTAPI(BaseGPTAPI, RateLimiter):
+    name: str = ""
+    llm: ClassVar[LLM] = LLM()
+    model: str = CONFIG.openai_api_model
+    auto_max_tokens: bool = False
+    _cost_manager: ClassVar[CostManager] = CostManager()
+    rpm: str = ''
     """
     Check https://platform.openai.com/examples for examples
     """
